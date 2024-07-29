@@ -1,15 +1,14 @@
 <script>
   export let type = "button";
-  export let caption;
   export let href = null;
   export let mode = null;
   export let color = null;
 </script>
 
 {#if href}
-  <a {href}>{caption}</a>
+  <a {href}><slot/></a>
 {:else}
-  <button class="{mode} {color}" {type} on:click>{caption}</button>
+  <button class="{mode} {color}" {type} on:click><slot/></button>
 {/if}
 
 <style>
@@ -24,6 +23,7 @@
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.26);
     cursor: pointer;
     text-decoration: none;
+    font-family: "Lato", sans-serif;
   }
 
   button:focus {
