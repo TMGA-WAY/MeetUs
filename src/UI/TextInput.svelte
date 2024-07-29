@@ -1,10 +1,10 @@
 <script>
-  export let controlType;
+  export let controlType = null;
   export let id;
   export let label;
-  export let row;
+  export let row = null;
   export let value;
-  export let type;
+  export let type = "text";
 </script>
 
 <div class="form-control">
