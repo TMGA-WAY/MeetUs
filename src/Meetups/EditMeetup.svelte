@@ -12,8 +12,6 @@
   let email = "";
   const dispatch = createEventDispatcher();
 
-  
-
   function submitForm() {
     dispatch("save", {
       title: title,
@@ -24,6 +22,10 @@
       imageUrl: imageUrl,
     });
   }
+
+  function cancelForm() {
+      dispatch("cancel");
+    }
 </script>
 
 <Modal title="Edit meetup Data" on:cancel>
@@ -76,8 +78,11 @@
       type="email"
       on:input={(event) => (email = event.target.value)}
     />
-    <!-- <Button type="submit">Save</Button> -->
   </form>
+  <div slot="footer">
+    <Button type="button" on:click={submitForm}>Save</Button>
+    <Button type="button" mode="outline" on:click={cancelForm}>Cancel</Button>
+  </div>
 </Modal>
 
 <style>
