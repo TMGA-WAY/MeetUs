@@ -5,16 +5,16 @@
   import Button from "./UI/Button.svelte";
   import EditMeetup from "./Meetups/EditMeetup.svelte";
   import meetups from "./Meetups/meetups-store";
+  import MeetupDetail from "./Meetups/MeetupDetail.svelte";
 
-  let title = "";
-  let subtitle = "";
-  let address = "";
-  let imageUrl = "";
-  let description = "";
-  let email = "";
+  $: console.log(pageData);
 
-  // let meetups =
   let editMode = null;
+  let page = "overview";
+  let pageData = {};
+
+  $: console.log("pagedata" + pageData);
+
   function cancelEdit() {
     editMode = null;
   }
@@ -23,23 +23,31 @@
     editMode = null;
   }
 
-  function toogleFavorite(event) {
-    const id = event.detail;
-    meetups.toggleFavorite(id);
+  function showDetails(event) {
+    page = "details";
+    pageData.id = event.detail;
+  }
+  function closeDeatil() {
+    page = "overview";
+    pageData = {};
   }
 </script>
 
 <Header />
 
 <main id="main">
-  <div class="meetup-controls">
-    <Button on:click={() => (editMode = "add")}>New Meetup</Button>
-  </div>
-  {#if editMode === "add"}
-    <EditMeetup on:save={addMeetup} on:cancel={cancelEdit} />
-  {/if}
+  {#if page === "overview"}
+    <div class="meetup-controls">
+      <Button on:click={() => (editMode = "add")}>New Meetup</Button>
+    </div>
+    {#if editMode === "add"}
+      <EditMeetup on:save={addMeetup} on:cancel={cancelEdit} />
+    {/if}
 
-  <MeetupGrid meetups={$meetups} on:toggleFavorite={toogleFavorite} />
+    <MeetupGrid meetups={$meetups} on:showdetails={showDetails} />
+  {:else}
+    <MeetupDetail id={pageData.id} on:close={closeDeatil} />
+  {/if}
 </main>
 
 <style>
