@@ -40,7 +40,10 @@
   </div>
 
   <footer>
-    <Button href="mailto:{email}">Email</Button>
+    <!-- <Button href="mailto:{email}">Email</Button> -->
+    <Button mode="outline" type="button" on:click={() => dispatch("edit", id)}
+      >Edit</Button
+    >
     <Button
       mode="outline"
       color={isFav ? null : "success"}

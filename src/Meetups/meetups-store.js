@@ -38,6 +38,17 @@ const customMeetupsStore = {
       return [newMeetup, ...items];
     });
   },
+
+  updateMeetup: (id, meetupData) => {
+    meetups.update((items) => {
+      const meetupIndex = items.findIndex((i) => i.id === id);
+      const updatedMeetup = { ...items[meetupIndex], ...meetupData }; // get the item with index and replaced with meetupDate
+      const updatedMeetups = [...items];
+      updatedMeetups[meetupIndex] = updatedMeetup;
+      return updatedMeetups;
+    });
+  },
+
   toggleFavorite: (id) => {
     meetups.update((items) => {
       const updatedMeetup = { ...items.find((m) => m.id === id) };
@@ -47,6 +58,12 @@ const customMeetupsStore = {
       const updatedMeetups = [...items];
       updatedMeetups[meetupIndex] = updatedMeetup;
       return updatedMeetups;
+    });
+  },
+  deleteMeetup: (id) => {
+    meetups.update((items) => {
+      const updatedMeetup = items.filter((i) => i.id !== id);
+      return updatedMeetup;
     });
   },
 };
