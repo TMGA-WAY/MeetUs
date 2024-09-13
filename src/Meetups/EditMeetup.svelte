@@ -64,7 +64,28 @@
     if (id) {
       meetups.updateMeetup(id, meetupData);
     } else {
-      meetups.addMeetup(meetupData);
+      fetch("url/meetups.json", {
+        method: "POST",
+        body: JSON.stringify({ ...meetupData, isFavorite: false }),
+        headers: { "Content-Type": "application/json" },
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("An error occured, Please try again!");
+          }
+          return res.json();
+        })
+        .then((data) => {
+          meetups.addMeetup({
+            ...meetupData,
+            isFavorite: false,
+            id: data.name,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      // meetups.addMeetup(meetupData);
     }
     dispatch("save"); // to close the modal
   }
@@ -73,10 +94,9 @@
     dispatch("cancel"); // to close the modal
   }
 
-  function deleteMeetup()
-  {
-    meetups.deleteMeetup(id)
-    dispatch('cancel')
+  function deleteMeetup() {
+    meetups.deleteMeetup(id);
+    dispatch("cancel");
   }
 </script>
 
