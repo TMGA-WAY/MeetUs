@@ -4,6 +4,7 @@
   import EditMeetup from "./Meetups/EditMeetup.svelte";
   import meetups from "./Meetups/meetups-store";
   import MeetupDetail from "./Meetups/MeetupDetail.svelte";
+  import LoadingSpinner from "./UI/LoadingSpinner.svelte";
 
   $: console.log(pageData);
 
@@ -11,6 +12,29 @@
   let page = "overview";
   let pageData = {};
   let editedId;
+  let isLoading = true;
+
+  fetch(`https://myapplicationproject-9ac7c.firebaseio.com/meetups.json`)
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("Fetching meetups failed, please try again later!");
+      }
+
+      return res.json();
+    })
+    .then((data) => {
+      const loadedMeetups = [];
+      for (const key in data) {
+        loadedMeetups.push({ ...data[key], id: key });
+      }
+      setTimeout(() => {
+        isLoading = false;
+        meetups.setMeetups(loadedMeetups.reverse());
+      }, 1000);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 
   $: console.log("pagedata" + pageData);
 
@@ -46,14 +70,18 @@
       <EditMeetup id={editedId} on:save={saveMeetup} on:cancel={cancelEdit} />
     {/if}
 
-    <MeetupGrid
-      meetups={$meetups}
-      on:showdetails={showDetails}
-      on:edit={startEdit}
-      on:add={() => {
-        editMode = "edit";
-      }}
-    />
+    {#if isLoading}
+      <LoadingSpinner />
+    {:else}
+      <MeetupGrid
+        meetups={$meetups}
+        on:showdetails={showDetails}
+        on:edit={startEdit}
+        on:add={() => {
+          editMode = "edit";
+        }}
+      />
+    {/if}
   {:else}
     <MeetupDetail id={pageData.id} on:close={closeDeatil} />
   {/if}

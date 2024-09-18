@@ -15,6 +15,23 @@
   const dispatch = createEventDispatcher();
 
   function toogleFavorite() {
+    fetch(
+      `https://myapplicationproject-9ac7c.firebaseio.com/meetups/${id}.json`,
+      {
+        method: "PATCH",
+        body: JSON.stringify({ isFavorite: !isFav }),
+        headers: { "Content-Type": "application/json" },
+      }
+    )
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("An error ocurred, please try again !");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
     meetups.toggleFavorite(id);
   }
 </script>
