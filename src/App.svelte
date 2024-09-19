@@ -5,6 +5,7 @@
   import meetups from "./Meetups/meetups-store";
   import MeetupDetail from "./Meetups/MeetupDetail.svelte";
   import LoadingSpinner from "./UI/LoadingSpinner.svelte";
+  import Error from "./UI/Error.svelte";
 
   $: console.log(pageData);
 
@@ -13,6 +14,7 @@
   let pageData = {};
   let editedId;
   let isLoading = true;
+  let error;
 
   fetch(`https://myapplicationproject-9ac7c.firebaseio.com/meetups.json`)
     .then((res) => {
@@ -33,6 +35,7 @@
       }, 1000);
     })
     .catch((err) => {
+      error = err;
       console.log(err);
     });
 
@@ -60,7 +63,15 @@
     editMode = "edit";
     editedId = event.detail;
   }
+
+  function clearError() {
+    error = null;
+  }
 </script>
+
+{#if error}
+  <Error message={error} on:cancel={clearError} />
+{/if}
 
 <Header />
 
